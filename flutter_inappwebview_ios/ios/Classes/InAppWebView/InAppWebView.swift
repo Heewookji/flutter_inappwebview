@@ -274,11 +274,15 @@ public class InAppWebView: WKWebView, UIScrollViewDelegate, WKUIDelegate,
         
         // https://github.com/pichillilorenzo/flutter_inappwebview/pull/1665
         if preventGestureDelay, let gestures = superview?.superview?.gestureRecognizers {
+            var gesturesToRemove: [UIGestureRecognizer] = []
             for gesture in gestures {
                 let gestureType = NSStringFromClass(type(of: gesture))
                 if gestureType == "DelayingGestureRecognizer" || gestureType == "FlutterDelayingGestureRecognizer" {
-                    gesture.isEnabled = false
+                    gesturesToRemove.append(gesture)
                 }
+            }
+            for gesture in gesturesToRemove {
+                superview?.superview?.removeGestureRecognizer(gesture)
             }
         }
         
